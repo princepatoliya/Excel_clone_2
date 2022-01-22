@@ -1,4 +1,17 @@
-function generateCells() {
+$(document).ready(function() {
+
+    for (let i = 1; i <= 100; i++) {
+        
+        let ans = getCodeFromNumber(i);
+
+        let column = `<div class="column-name colId-${i}" id="colCod-${ans}">${ans}</div>`;
+        $(".column-name-container").append(column);
+
+        let row = `<div class="row-name" id="rowId-${i}">${i}</div>`;
+        $(".row-name-container").append(row);
+    }
+
+    // generates cells
     for(let i = 1; i<=100; i++){
         let cellRow = $(`<div class="cell-row"></div>`);
         let colCode = $(`.colId-${i}`).attr(`id`).split('-')[1];
@@ -11,78 +24,6 @@ function generateCells() {
         $('.input-cell-container').append(cellRow);
 
     }
-}
-
-function getRowColId(e){
-    let id = $(e).attr("id").split("-");
-    return [parseInt(id[1]), parseInt(id[3])];
-}
-
-function updateCell(property, value){
-    $(".input-cell.selected").each(function(){
-        $(this).css(property, value);
-    });
-    
-}
-
-$(".icon-bold").click(function(){
-    if($(this).hasClass("selected")){
-        updateCell("font-weight", "")
-    }
-    else{
-        updateCell("font-weight", "bold")
-    }
-});
-
-$(".icon-italic").click(function(){
-    if($(this).hasClass("selected")){
-        updateCell("font-style", "")
-    }
-    else{
-        updateCell("font-style", "italic")
-    }
-});
-
-
-$(".icon-underline").click(function(){
-    if($(this).hasClass("selected")){
-        updateCell("text-decoration", "")
-    }
-    else{
-        updateCell("text-decoration", "underline")
-    }
-});
-
-
-
-$(document).ready(function() {
-
-    for (let i = 1; i <= 100; i++) {
-        let ans = ""
-        let n = i;
-
-        while (n > 0) {
-
-            let rem = n % 26;
-            if (rem == 0) {
-                ans = "Z" + ans;
-                n = Math.floor(n / 26) - 1;
-            }
-            else {
-                ans = String.fromCharCode(rem - 1 + 65) + ans;
-                n = Math.floor(n / 26);
-            }
-        }
-
-        let column = `<div class="column-name colId-${i}" id="colCod-${ans}">${ans}</div>`;
-        $(".column-name-container").append(column);
-
-        let row = `<div class="row-name" id="rowId-${i}">${i}</div>`;
-        $(".row-name-container").append(row);
-    }
-
-    // generates cells
-    generateCells();
     
     
     // click event listener for selector
@@ -97,6 +38,7 @@ $(document).ready(function() {
     });
 
     $(".input-cell").click(function(event){
+        [rowId, colId] = getRowColId(this);
         if(event.ctrlKey){
             [rowId, colId] = getRowColId(this);
 
@@ -139,6 +81,11 @@ $(document).ready(function() {
             $(".input-cell.selected").removeClass("selected top-cell-selected bottom-cell-selected right-cell-selected left-cell-selected");
             $(this).addClass("selected");
         }
+
+        console.log(getCodeFromNumber(colId) + rowId);
+        $('.cell-name-box').empty();
+        $('.cell-name-box').append(getCodeFromNumber(colId) + rowId);
+
     });
 
     $(".input-cell").dblclick(function(){
@@ -158,6 +105,63 @@ $(document).ready(function() {
         $(".row-name-container").scrollTop(this.scrollTop);
     });
 
+});
+
+function getCodeFromNumber(n){
+    let ans = "";
+    while (n > 0) {
+
+        let rem = n % 26;
+        if (rem == 0) {
+            ans = "Z" + ans;
+            n = Math.floor(n / 26) - 1;
+        }
+        else {
+            ans = String.fromCharCode(rem - 1 + 65) + ans;
+            n = Math.floor(n / 26);
+        }
+    }
+    return ans;
+}
+
+function getRowColId(e){
+    let id = $(e).attr("id").split("-");
+    return [parseInt(id[1]), parseInt(id[3])];
+}
+
+function updateCell(property, value){
+    $(".input-cell.selected").each(function(){
+        $(this).css(property, value);
+    });
+    
+}
+
+$(".icon-bold").click(function(){
+    if($(this).hasClass("selected")){
+        updateCell("font-weight", "")
+    }
+    else{
+        updateCell("font-weight", "bold")
+    }
+});
+
+$(".icon-italic").click(function(){
+    if($(this).hasClass("selected")){
+        updateCell("font-style", "")
+    }
+    else{
+        updateCell("font-style", "italic")
+    }
+});
+
+
+$(".icon-underline").click(function(){
+    if($(this).hasClass("selected")){
+        updateCell("text-decoration", "")
+    }
+    else{
+        updateCell("text-decoration", "underline")
+    }
 });
 
 

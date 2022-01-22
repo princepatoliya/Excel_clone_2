@@ -271,3 +271,7 @@ body{
 .sheet-tab{
     cursor: default;
 }
+
+.cell-name-box{
+    justify-content: center;
+}
